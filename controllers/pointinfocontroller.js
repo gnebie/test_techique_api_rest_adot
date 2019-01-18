@@ -8,7 +8,7 @@ function isObject(a) {
 
 // vérificaton du type des elements
 function check_req_values (body) {
-	if (isObject(body) && ("lat" in body) && ("lon" in body) && ("name" in body))
+	if (isObject(body) && ("lat" in body) && ("lon" in body) && ("name" in body) && !isNaN(body.lat) && !isNaN(body.lon) && typeof body.name === 'string')
 		return true;
 	return false;
 }
