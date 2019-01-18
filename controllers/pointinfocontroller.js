@@ -4,7 +4,7 @@ let model = require("../models/pointinfomodel");
 
 function isObject(a) {
 	return (!!a) && (a.constructor === Object);
-};
+}
 
 // vérificaton du type des elements
 function check_req_values (body) {
@@ -22,7 +22,7 @@ exports.find_elems = function(req, res) {
 		if (clean_tab.length)
 			ret = model.get_event(clean_tab);
 	} else {
-		ret = {name:"Error", val:"JSON array needed"}
+		ret = {name:"Error", val:"JSON array needed"};
 	}
 	res.send(ret);
 };
