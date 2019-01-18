@@ -1,51 +1,48 @@
 const csv = require("csvtojson");
 
-const roundsize = 1;
-
 // fonction de récupération du fichier csv et de transformation en json
 const getevenJson = async ()=>{
 	const even = await csv({/* noheader:true, output: "csv" */}).fromFile("./datas/events.csv");
 	return even;
 };
-let evenJson = [];
 
+let evenJson = [];
 // récuperation du tableau une seule fois dans une variable globale pour ne pas avoir le load le tableau a chaque appel
 getevenJson().then((even) => {
 	evenJson = even;
 });
 
-// fonction permetant de faire un arrondi en js a size décimale près
-function round(elem, size) {
-	return (Math.round(Math.pow(10, size) * elem) / Math.pow(10, size));
-}
-// fonction permetant de faire un arrondi inferieur en js a size décimale près
-function floor(elem, size) {
-	return (Math.floor(Math.pow(10, size) * elem) / Math.pow(10, size));
-}
-// fonction permetant de faire un arrondi supperieur en js a size décimale près
-function ceil(elem, size) {
-	return (Math.ceil(Math.pow(10, size) * elem) / Math.pow(10, size));
+// transforme le tableau en objet
+function format_return(point_tab) {
+	let ret = {};
+	point_tab.map(function (elem) {
+			return {"lat":elem.lat, "lon":elem.lon, "name":elem.name, "impression":elem.impression, "click":elem.click}
+		}).forEach(function (point) {
+				ret[point.name] = point;
+		})
+	return (ret);
 }
 
-// compte le nombre de fois qu'une impression publicitaire ou un clics a été fait à un point d'intéret donné
-// test avec un point d'intéret arrondi ou bien avec un range en carre ou en cercle
-exports.get_event =  (lat, lon, ecart_imp, ecart_cli) => {
+// check les distances entre les differents elements
+exports.get_event = (point_tab) => {
 	let impression = 0;
 	let click = 0;
+
+	// ajout des elements absents de l'objet
+	point_tab.forEach(function (point) {
+		point.impression = 0;
+		point.click = 0;
+	})
 	evenJson.forEach(function(elem) {
-		if (elem.event_type == "imp") {
-			// if (round(elem.lat, roundsize) == round(lat, roundsize) && round(elem.lon, roundsize) == round(lon, roundsize)) {
-			// if (elem.lat > lat - ecart_imp && elem.lat < lat + ecart_imp && elem.lon < lon + ecart_imp && elem.lon > lon - ecart_imp) {
-			if ((elem.lat - lat)**2 + (elem.lon - lon)**2 < ecart_imp**2) {
-				impression += 1;
-			}
-		} else if (elem.event_type == "click") {
-			// if (round(elem.lat, roundsize) == round(lat, roundsize) && round(elem.lon, roundsize) == round(lon, roundsize)) {
-			// if (elem.lat > lat - ecart_cli && elem.lat < lat + ecart_cli && elem.lon < lon + ecart_cli && elem.lon > lon - ecart_cli) {
-			if ((elem.lat - lat)**2 + (elem.lon - lon)**2 < ecart_cli**2) {
-				click += 1;
-			}
-		}
+		point_tab.forEach((point) => {point.distance = ((point.lat - elem.lat)**2 + (point.lon - elem.lon)**2)**2})// distance enclidienne // racine( (xa-ya)2 + (xb-yb)2 ).
+		point_tab.sort(function(p1, p2) {
+			return (p1.distance - p2.distance);
+		})
+		if (elem.event_type == "imp")
+			point_tab[0].impression += 1;
+		else if (elem.event_type == "click")
+			point_tab[0].click += 1;
 	});
-	return ({impression, click});
+	const return_formated_object = format_return(point_tab);
+	return return_formated_object;
 };
