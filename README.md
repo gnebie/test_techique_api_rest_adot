@@ -1,4 +1,4 @@
-# test_techique_api_rest_adot
+# Adot Test technique api
 
 
 ## Start the API
@@ -10,7 +10,7 @@ npm start
 
 The API will get a localization (lat, lon) and send back the impressions and clicks number of the closest interest points find on the events.csv file
 
-the interest points are all the points finds on the range on the localization circle area with a range radius of 0.075 
+the interest points are all the points finds on the range on the localization circle area with a range radius of 0.075
 
 the API will listen on **localhost** : port **3000**
 
@@ -52,4 +52,12 @@ and send back a formated JSON object answer
         "click": 16350
     }
 }
+```
+
+Request exemple with curl
+```bash
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '[{"lat": 48.8759992,"lon": 2.3481253,"name": "Arc de triomphe"}]' \
+  http://localhost:3000/pointinfo
 ```
