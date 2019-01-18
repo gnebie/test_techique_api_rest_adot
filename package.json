@@ -1,0 +1,43 @@
+{
+	"name": "pointofinterestapi",
+	"version": "1.0.0",
+	"description": "test technique adot",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gnebie/testtechniqueadot.git"
+	},
+	"keywords": [],
+	"author": "nebie guillaume",
+	"bugs": {
+		"url": "https://github.com/gnebie/testtechniqueadot/issues"
+	},
+	"homepage": "https://github.com/gnebie/testtechniqueadot#readme",
+	"devDependencies": {
+		"nodemon": "^1.11.0",
+		"eslint": "^4.19.1"
+	},
+	"dependencies": {
+		"body-parser": "^1.15.2",
+		"csvtojson": "^2.0.8",
+		"express": "^4.14.0"
+	},
+	"eslintConfig": {
+		"parserOptions": {
+			"env": {
+				"node": true
+			},
+			"ecmaVersion": 7,
+			"sourceType": "module"
+		},
+		"rules": {
+			"semi": "error",
+			"consistent-return": 0,
+			"no-console": 0
+		}
+	}
+}
